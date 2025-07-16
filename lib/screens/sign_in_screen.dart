@@ -1,5 +1,7 @@
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:plantist_app/screens/TodoListPage.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -7,13 +9,16 @@ class SignInScreen extends StatefulWidget {
   @override
   State<SignInScreen> createState() => _SignInScreenState();
 }
-//e-mail ve şifre girildileri tanımları
+
 class _SignInScreenState extends State<SignInScreen> {
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
 
-  bool isEmailValid = false; //e-mal geçerli mi ona bakıyoruz
-  bool isPasswordVisible = false; //şifre görünüp gizleme ekledim
+  Flushbar? currentFlushbar; // Uyarı mesajı
+  bool isFlushbarVisible = false; // SPAM kontrolü
+
+  bool isEmailValid = false;
+  bool isPasswordVisible = false;
 
   @override
   void initState() {
@@ -36,7 +41,7 @@ class _SignInScreenState extends State<SignInScreen> {
     setState(() {});
   }
 
-  @override //bu bölümde program kapatılınca hafızada kullanılan şeyleri temizledim
+  @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
@@ -135,9 +140,67 @@ class _SignInScreenState extends State<SignInScreen> {
                     child: ElevatedButton(
                       onPressed: isFormValid
                           ? () {
+                        final email = emailController.text.trim();
+                        final password = passwordController.text.trim();
 
+                        if (email == "melih@rubikpara.com" && password == "123456") {
+                          if (!isFlushbarVisible) {
+                            setState(() {
+                              isFlushbarVisible = true;
+                            });
+
+                            currentFlushbar = Flushbar(
+                              title: "Login Successful",
+                              message: "You are transferred to the to-do page",
+                              backgroundColor: Colors.green,
+                              icon: const Icon(Icons.check_circle, color: Colors.white),
+                              borderRadius: BorderRadius.circular(75.0),
+                              duration: const Duration(seconds: 1),
+                              margin: const EdgeInsets.all(50),
+                              flushbarPosition: FlushbarPosition.BOTTOM,
+                            );
+
+                            currentFlushbar!.show(context).then((_) {
+                              if (mounted) {
+                                setState(() {
+                                  isFlushbarVisible = false;
+                                });
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const TodoListPage()),
+                                );
+                              }
+                            });
+                          }
+                        } else {
+                          if (!isFlushbarVisible) {
+                            setState(() {
+                              isFlushbarVisible = true;
+                            });
+
+                            currentFlushbar = Flushbar(
+                              title: "Login Failed!",
+                              message: "Incorrect email or password!",
+                              backgroundColor: Colors.black,
+                              icon: const Icon(Icons.error, color: Colors.redAccent),
+                              borderRadius: BorderRadius.circular(75.0),
+                              duration: const Duration(seconds: 2),
+                              margin: const EdgeInsets.all(75),
+                              flushbarPosition: FlushbarPosition.BOTTOM,
+                            );
+
+                            currentFlushbar!.show(context).then((_) {
+                              if (mounted) {
+                                setState(() {
+                                  isFlushbarVisible = false;
+                                });
+                              }
+                            });
+                          }
+                        }
                       }
                           : null,
+
                       style: ElevatedButton.styleFrom(
                         backgroundColor: isFormValid ? Colors.black : Colors.grey[400],
                         shape: RoundedRectangleBorder(
