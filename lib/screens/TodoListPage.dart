@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+
+
 class TodoListPage extends StatefulWidget {
   const TodoListPage({super.key});
 
@@ -183,7 +185,7 @@ class _TodoListPageState extends State<TodoListPage> {
     final otherTasks = tasks.where((t) =>
     !isSameDay(t['date'], today) && !isSameDay(t['date'], tomorrow)).toList();
 
-    // 🧠 Tarihlere göre grupluyoruz
+
     Map<String, List<Map<String, dynamic>>> groupedTasks = {};
     for (var task in otherTasks) {
       final formattedDate = DateFormat('dd.MM.yyyy').format(task['date']);
@@ -216,7 +218,7 @@ class _TodoListPageState extends State<TodoListPage> {
                 .map((entry) => _buildTask(entry.key + todayTasks.length, entry.value))
                 .toList(),
 
-            // 🗓️ Diğer günleri grup grup gösteriyoruz
+
             for (var entry in groupedTasks.entries) ...[
               SizedBox(height: 16.h),
               Text(entry.key, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),

@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "555808505225",
+    "firebase_url": "https://plantistapp-109a1-default-rtdb.firebaseio.com",
+    "project_id": "plantistapp-109a1",
+    "storage_bucket": "plantistapp-109a1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555808505225:android:16f711d2cfa72aa2c3b558",
+        "android_client_info": {
+          "package_name": "com.example.plantist_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADrX9KiSZz4o2luy9hKU2K2VNP9yAUMJg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555808505225:android:c32d3df91fb62cf0c3b558",
+        "android_client_info": {
+          "package_name": "com.example.plantistapp.plantist_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADrX9KiSZz4o2luy9hKU2K2VNP9yAUMJg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

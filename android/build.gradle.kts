@@ -1,3 +1,8 @@
+plugins {
+    // Firebase Google Services plugin (en güncel)
+    id("com.google.gms.google-services") version "4.4.3" apply false
+}
+
 allprojects {
     repositories {
         google()
@@ -12,6 +17,7 @@ subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }

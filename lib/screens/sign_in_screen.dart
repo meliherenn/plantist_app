@@ -1,6 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plantist_app/screens/TodoListPage.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -14,8 +15,8 @@ class _SignInScreenState extends State<SignInScreen> {
   late final TextEditingController emailController;
   late final TextEditingController passwordController;
 
-  Flushbar? currentFlushbar; // Uyarı mesajı
-  bool isFlushbarVisible = false; // SPAM kontrolü
+  Flushbar? currentFlushbar;
+  bool isFlushbarVisible = false;
 
   bool isEmailValid = false;
   bool isPasswordVisible = false;
@@ -139,15 +140,18 @@ class _SignInScreenState extends State<SignInScreen> {
                     height: 52.h,
                     child: ElevatedButton(
                       onPressed: isFormValid
-                          ? () {
+                          ? () async {
                         final email = emailController.text.trim();
                         final password = passwordController.text.trim();
 
-                        if (email == "melih@rubikpara.com" && password == "123456") {
+                        try {
+                          await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: email,
+                            password: password,
+                          );
+
                           if (!isFlushbarVisible) {
-                            setState(() {
-                              isFlushbarVisible = true;
-                            });
+                            setState(() => isFlushbarVisible = true);
 
                             currentFlushbar = Flushbar(
                               title: "Login Successful",
@@ -160,27 +164,23 @@ class _SignInScreenState extends State<SignInScreen> {
                               flushbarPosition: FlushbarPosition.BOTTOM,
                             );
 
-                            currentFlushbar!.show(context).then((_) {
-                              if (mounted) {
-                                setState(() {
-                                  isFlushbarVisible = false;
-                                });
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const TodoListPage()),
-                                );
-                              }
-                            });
+                            await currentFlushbar!.show(context);
+
+                            if (mounted) {
+                              setState(() => isFlushbarVisible = false);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const TodoListPage()),
+                              );
+                            }
                           }
-                        } else {
+                        } on FirebaseAuthException catch (e) {
                           if (!isFlushbarVisible) {
-                            setState(() {
-                              isFlushbarVisible = true;
-                            });
+                            setState(() => isFlushbarVisible = true);
 
                             currentFlushbar = Flushbar(
                               title: "Login Failed!",
-                              message: "Incorrect email or password!",
+                              message: e.message ?? "Unknown error",
                               backgroundColor: Colors.black,
                               icon: const Icon(Icons.error, color: Colors.redAccent),
                               borderRadius: BorderRadius.circular(75.0),
@@ -189,18 +189,14 @@ class _SignInScreenState extends State<SignInScreen> {
                               flushbarPosition: FlushbarPosition.BOTTOM,
                             );
 
-                            currentFlushbar!.show(context).then((_) {
-                              if (mounted) {
-                                setState(() {
-                                  isFlushbarVisible = false;
-                                });
-                              }
-                            });
+                            await currentFlushbar!.show(context);
+                            if (mounted) {
+                              setState(() => isFlushbarVisible = false);
+                            }
                           }
                         }
                       }
                           : null,
-
                       style: ElevatedButton.styleFrom(
                         backgroundColor: isFormValid ? Colors.black : Colors.grey[400],
                         shape: RoundedRectangleBorder(
